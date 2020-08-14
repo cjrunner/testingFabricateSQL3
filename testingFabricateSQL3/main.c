@@ -108,7 +108,7 @@ int main(int argc, const char * argv[]) { //const char *argv[] is the same as **
     fabricateSQL(expectedNumberOfTokenReplacements , &stt[0], &str[0], ptrSQL_Input_Template, cbb_results, (int)sizeOfTemplate*2, d);
     if (d) printf("=======> Returned from fabricateSQL\n");
     if (d) printf("Call-back buffer, cbb, looks like:\n");
-    printf  (")%s\n", cbb_results);
+    printf  ("%s\n", cbb_results);
     if (d) printf("Done =============================================================================\n");
     free(ptrSQL_Input_Template);
     free(cbb_results);
