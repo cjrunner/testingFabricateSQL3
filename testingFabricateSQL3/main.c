@@ -33,7 +33,7 @@ int main(int argc, const char * argv[]) { //const char *argv[] is the same as **
     b) Place `-lfabricateSQL` in "Other Linker Flags". \
     *******************************************************************************************************************************
     int d;
-    printf( "Hello, %s\nsqlTemplate looks like:\n%s\nWe have %d input Parameters; command line parameters look like:\n",  \
+    printf( "0. Hello, %s\nsqlTemplate looks like:\n%s\nWe have %d input Parameters; command line parameters look like:\n",  \
            argv[0], sqlTemplate, argc);
     for (int i=0; i < argc; i++) {
         printf ("\t%d. %s\n", i, argv[i]);
@@ -48,7 +48,7 @@ int main(int argc, const char * argv[]) { //const char *argv[] is the same as **
     
     //    const unsigned long sizeOfTemplate = sizeof(*sqlTemplate)+1;
     if (argc == 2) {
-        printf ("The order of the command line parameters is:\n1. The decimal siteid\n2. the date of interest (in YYYY-MM-DD format)\n \
+        printf ("1. The order of the command line parameters is:\n1. The decimal siteid\n2. the date of interest (in YYYY-MM-DD format)\n \
                 3. The zenithdistance of sunrise/sunset as a decimal floating point number (like 90.5833..)\n4. The numer of lines of data before \
                 sunrise/sunset (as a decimal integer)\n5. The number of lines after sunrise/sunset (as a decimal integer)\n6. An indicaton of \
                 sunset/sunrise, then use the ASCII character character strings of `SS` or `SunSet` character for sunset, \
@@ -68,7 +68,15 @@ int main(int argc, const char * argv[]) { //const char *argv[] is the same as **
     //  Copyright © 2020 CliffordCampo. All rights reserved.
     //
     //        SS *doSunSet =  new SS; //How does a C program know about c++ classes?
-    
+    char *ss[6+1][2] = { \
+        {"SITEID", "26"},\
+        {"_DATE_","2020-08-06"},\
+        {"SUNSETDEF","90.58333333"}, \
+        {"BEFORESUNSET", "3"}, \
+        {"AFTERSUNSET","3"},\
+        {"SRorSS","SR"}, \
+        {"TERM", ""} \
+    };
     char *str[expectedNumberOfTokenReplacements]; // Array containing pointers to the strings replacing the tokens.
     //    Take the replacement values from the command line.
     
@@ -81,7 +89,7 @@ int main(int argc, const char * argv[]) { //const char *argv[] is the same as **
     
     
     if (d) {
-        printf ("Replacement Array str[%d] looks like:\n",  expectedNumberOfTokenReplacements);
+        printf ("2. Replacement Array str[%d] looks like:\n",  expectedNumberOfTokenReplacements);
         for (int i=0; i<expectedNumberOfTokenReplacements; i++) {
             printf("\tstr[%d] = %s\n", i, str[i] );
         }
@@ -94,7 +102,7 @@ int main(int argc, const char * argv[]) { //const char *argv[] is the same as **
     stt[4] = "AFTERSUNSET";
     stt[5] = "SRorSS";
     if (d) {
-        printf ("Token Array stt[%d] looks like:\n",  expectedNumberOfTokenReplacements);
+        printf ("3. Token Array stt[%d] looks like:\n",  expectedNumberOfTokenReplacements);
         for (int i=0; i<expectedNumberOfTokenReplacements; i++) {
             printf("\tstt[%d] = %s\n", i, stt[i] );
         }
@@ -104,12 +112,12 @@ int main(int argc, const char * argv[]) { //const char *argv[] is the same as **
     //1
     //    std::string inputTemplate = sssql; //Initialize inputTemplate;
     ;
-    if (d) printf ("========> about to call fabricateSQL\n");
+    if (d) printf ("4. ========> about to call fabricateSQL\n");
     fabricateSQL(expectedNumberOfTokenReplacements , &stt[0], &str[0], ptrSQL_Input_Template, cbb_results, (int)sizeOfTemplate*2, d);
-    if (d) printf("=======> Returned from fabricateSQL\n");
-    if (d) printf("Call-back buffer, cbb, looks like:\n");
+    if (d) printf("5 =======> Returned from fabricateSQL\n");
+    if (d) printf("6 Call-back buffer, cbb, looks like:\n");
     printf  ("%s\n", cbb_results);
-    if (d) printf("Done =============================================================================\n");
+    if (d) printf("7.  Done =============================================================================\n");
     free(ptrSQL_Input_Template);
     free(cbb_results);
     return 0;
