@@ -251,7 +251,7 @@
 				"LD_DYLIB_INSTALL_NAME[arch=*]" = /usr/local/lib;
 				LD_GENERATE_MAP_FILE = YES;
 				"MODULEMAP_FILE[sdk=*]" = /tmp/testingFabricateSQL3_module_map_file;
-				"OTHER_LDFLAGS[arch=*]" = "-lfabricateSQL-r1";
+				"OTHER_LDFLAGS[arch=*]" = "-lfabricateSQLr2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
