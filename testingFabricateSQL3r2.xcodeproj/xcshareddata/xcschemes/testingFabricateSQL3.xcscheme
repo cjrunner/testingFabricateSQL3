@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2B6DAE5824E170C2003392E9"
-               BuildableName = "testingFabricateSQL3-r1"
-               BlueprintName = "testingFabricateSQL3-r1"
-               ReferencedContainer = "container:testingFabricateSQL3-r1.xcodeproj">
+               BuildableName = "testingFabricateSQL3r2"
+               BlueprintName = "testingFabricateSQL3r2"
+               ReferencedContainer = "container:testingFabricateSQL3r2.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2B6DAE5824E170C2003392E9"
-            BuildableName = "testingFabricateSQL3-r1"
-            BlueprintName = "testingFabricateSQL3-r1"
-            ReferencedContainer = "container:testingFabricateSQL3-r1.xcodeproj">
+            BuildableName = "testingFabricateSQL3r2"
+            BlueprintName = "testingFabricateSQL3r2"
+            ReferencedContainer = "container:testingFabricateSQL3r2.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -56,9 +56,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2B6DAE5824E170C2003392E9"
-            BuildableName = "testingFabricateSQL3-r1"
-            BlueprintName = "testingFabricateSQL3-r1"
-            ReferencedContainer = "container:testingFabricateSQL3-r1.xcodeproj">
+            BuildableName = "testingFabricateSQL3r2"
+            BlueprintName = "testingFabricateSQL3r2"
+            ReferencedContainer = "container:testingFabricateSQL3r2.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
@@ -67,15 +67,15 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "26"
+            argument = "25"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "_DATE_"
+            argument = "SOMEDATE"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "2020-08-09"
+            argument = "2020-08-30"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -87,7 +87,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "BEFORESUNSET"
+            argument = "BEFOREDATAPOINTS"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -95,7 +95,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "AFTERESUNSET"
+            argument = "AFTERDATAPOINTS"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -111,8 +111,16 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "x"
+            argument = "Term"
             isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "Term"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "DEBUG"
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
       <AdditionalOptions>
@@ -129,9 +137,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2B6DAE5824E170C2003392E9"
-            BuildableName = "testingFabricateSQL3-r1"
-            BlueprintName = "testingFabricateSQL3-r1"
-            ReferencedContainer = "container:testingFabricateSQL3-r1.xcodeproj">
+            BuildableName = "testingFabricateSQL3r2"
+            BlueprintName = "testingFabricateSQL3r2"
+            ReferencedContainer = "container:testingFabricateSQL3r2.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

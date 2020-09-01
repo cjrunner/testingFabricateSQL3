@@ -11,8 +11,19 @@
 #include <string.h>
 #include "testingFabricateSQL3.h"
 
-extern char sqlTemplateSS[];  //see constants.c
+//see constants.c
+extern const char *ptrSS;
+extern char sqlTemplateSS[];
 extern unsigned long sizeOfTemplateSS;
+extern char sqlTemplateNOON[];
+extern unsigned long sizeOfTemplateNOON;
+extern char *ptrSQLTemplateNOON;
+extern char *ptrSQLTemplateSS;
+extern char *ptrSQLTemplateSR;
+extern unsigned long sizeOfTemplateSR;
+extern sqlArray sqa[2][2];
+extern sqlArray  *ptrSA;
+
 
 // P R O T O T Y P E    P R O T O T Y P E    P R O T O T Y P E    P R O T O T Y P E    P R O T O T Y P E    P R O T O T Y P E
 //void fabricateSQL(int numberOfTokensEqualToNumberOfReplacements, /* number of tokens (and replacements) to process */ \
@@ -32,6 +43,25 @@ int main(int argc, const char **argv) { //const char *argv[] is the same as **ar
     "Dynamic Library Install Name"; \
     b) Place `-lfabricateSQL` in "Other Linker Flags". \
     *******************************************************************************************************************************
+    const int maxRows = 4;
+    const int maxColumns=2;
+    sqlArray sqa[maxRows][maxColumns];
+    sqa[3]->psql = NULL;
+    sqa[3]->ulsql = 0;
+    sqa[2]->psql = ptrSQLTemplateSS;
+    sqa[2]->ulsql = sizeOfTemplateSS;
+    sqa[1]->psql = ptrSQLTemplateNOON;
+    sqa[1]->ulsql = sizeOfTemplateNOON;
+    sqa[0]->psql = ptrSQLTemplateSR;
+    sqa[0]->ulsql = sizeOfTemplateSR;
+    sqlArray  **ptrSA;
+    sqlArray  *ptrsa;
+    ptrsa = &sqa[0][0]; //Establish addressability to the array of structurs of type sqlArray
+    ptrSA = &ptrsa;
+    for (int k=0; k<maxRows; k++) {
+        printf("%d, In source module constants.cpp, the 2X2 array named sqa looks like:\n%s \nand is of length %lu.\n", k, \
+            sqa[k]->psql, sqa[k]->ulsql);
+    }
     int d;
     int rc;
     printf( "0. Hello, %s\nsqlTemplate looks like:\n%s\nWe have %d input Parameters; command line parameters look like:\n",  \
@@ -39,14 +69,15 @@ int main(int argc, const char **argv) { //const char *argv[] is the same as **ar
     for (int i=0; i < argc; i++) {
         printf ("\t%d. %s\n", i, argv[i]);
     }
-    if (argc <= 7) {
+    if (strcmp("DEBUG", *(argv + argc-1)) ) { //argc-1 means that we look for the last command line argument to indicate if we \
+        go into debug mode. If the last command line argument is not `DEBUG` then we are not in debug mode.
         d = 0; //Assume no debugging. Debugging enables by setting one more command line input, of ANY character.
     } else {
         d = 1; //Enable debugging info from dylib.
     }
     int expectedNumberOfTokenReplacements = argc-1-d; //This is the expected number of command line arguments we expect to have if \
     we don't set the debugging flag.
-    
+    int numberOfTokenReplacementPairs = expectedNumberOfTokenReplacements>>1;
     //    const unsigned long sizeOfTemplate = sizeof(*sqlTemplate)+1;
     if (argc == 2) {
         printf ("1. The order of the command line parameters is:\n1. The decimal siteid\n2. the date of interest (in YYYY-MM-DD format)\n \
@@ -57,10 +88,7 @@ int main(int argc, const char **argv) { //const char *argv[] is the same as **ar
                 desire to ouput debugging information.\n");
         exit(1);
     }
-    void *p;
-    char *cbb_results = (char *) calloc(sizeOfTemplateSS*2, 1);
-    char *ptrSQL_Input_Template = (char *)calloc(sizeOfTemplateSS, 1 );
-    p = (char *)memcpy(ptrSQL_Input_Template, sqlTemplateSS, sizeOfTemplateSS ); //memcpy requires #include <string.h>
+
     //
     //  constants.cpp
     //  dataSurroundingSunSet
@@ -69,7 +97,7 @@ int main(int argc, const char **argv) { //const char *argv[] is the same as **ar
     //  Copyright © 2020 CliffordCampo. All rights reserved.
     //
     //        SS *doSunSet =  new SS; //How does a C program know about c++ classes?
-    char *ss[7][2];
+    char *ss[numberOfTokenReplacementPairs][2];
 //    char *ss[][2] = { /* Works for 2-column arrays of an arbitrary number of rows */ \
 //        {"SITEID", ""}, /* Let us see how the compiler responds to NULL. According to debugger NULL looks like an
 //                           address of 00 00 00 00 00 00 00 00 */ \
@@ -99,16 +127,43 @@ int main(int argc, const char **argv) { //const char *argv[] is the same as **ar
         j = 1 + j;
         i = 2 + i; //get the next pair of token/replacemnet values
     }
-
-    
-    ;
-    if (d) printf ("4. ========> about to call fabricateSQL\n");
-    fabricateSQLr2(expectedNumberOfTokenReplacements , &ss[0][0], ptrSQL_Input_Template, cbb_results, (int)sizeOfTemplateSS*2, d);
-    if (d) printf("5 =======> Returned from fabricateSQL\n");
-    if (d) printf("6 Call-back buffer, cbb, looks like:\n");
+    char *ptrPerformanceBuffer;
+    ptrPerformanceBuffer = (char *)calloc(1000,1);
+    void *p;
+    int k=0;
+    FILE *fp = fopen ("/Users/cjc/sql/testingFabricateSQL3.sql", "a");
+    rewind(fp); // Start at the beginning;
+    do {
+    char *cbb_results = (char *) calloc(2*sqa[k]->ulsql, 1); //Since we don't know if the token/replacement process used to \
+        fabricate the SQL will result in result that is greater than or less than the size of the input template, we will request \
+        an outbuffer si
+    char *ptrSQL_Input_Template = (char *)calloc(sqa[k]->ulsql, 1 );
+    p = (char *)memcpy(ptrSQL_Input_Template, sqa[k]->psql, sqa[k]->ulsql ); //memcpy requires #include <string.h>
+    if (d) printf ("4.%d ========> about to call fabricateSQL\n", k);
+    rc = expectedNumberOfTokenReplacements>>1; // Let rc contain the number of template/replacement pairs.
+    fabricateSQLr2(ptrPerformanceBuffer, &ss[0][0], ptrSQL_Input_Template, cbb_results, (int)sizeOfTemplateSS*2, d);
+    if (d) printf("5.%d =======> Returned from fabricateSQL\n", k);
+    if (d) printf("6.%d Call-back buffer, cbb, looks like:\n", k);
     printf  ("%s\n", cbb_results);
-    if (d) printf("7.  Done =============================================================================\n");
+    rc=fprintf(fp, "%s\n", cbb_results);
+    if (rc) printf("Got a non-zero return code from fprintf of %d\n", rc);
+    if (d) printf("7.%d  Done =============================================================================\n", k);
+    printf("fabricateSQL's performance data:\n%s", ptrPerformanceBuffer);
     free(ptrSQL_Input_Template);
     free(cbb_results);
+    
+    k++;
+        if (k == 2) {
+            for (j = 0; j < numberOfTokenReplacementPairs; j++) {
+                if (strcmp(ss[j][0], "SRorSS") == 0) {
+                    ss[j][1] = (char *)ptrSS;
+                    break;
+                }
+            }
+        }
+    } while (sqa[k]->psql != NULL &&  sqa[k]->ulsql > 0);
+    rc = fclose(fp);
+    
+    free (ptrPerformanceBuffer);
     return 0;
 }

@@ -25,7 +25,7 @@
 
 /* Begin PBXFileReference section */
 		2B0A8D9424E2C60A0091AC60 /* testingFabricateSQL3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = testingFabricateSQL3.h; sourceTree = "<group>"; };
-		2B6DAE5924E170C2003392E9 /* testingFabricateSQL3-r1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "testingFabricateSQL3-r1"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B6DAE5924E170C2003392E9 /* testingFabricateSQL3r2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = testingFabricateSQL3r2; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B6DAE5C24E170C2003392E9 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		2B6DAE6324E175A4003392E9 /* constants.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = constants.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -52,7 +52,7 @@
 		2B6DAE5A24E170C2003392E9 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2B6DAE5924E170C2003392E9 /* testingFabricateSQL3-r1 */,
+				2B6DAE5924E170C2003392E9 /* testingFabricateSQL3r2 */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -70,9 +70,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2B6DAE5824E170C2003392E9 /* testingFabricateSQL3-r1 */ = {
+		2B6DAE5824E170C2003392E9 /* testingFabricateSQL3r2 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2B6DAE6024E170C3003392E9 /* Build configuration list for PBXNativeTarget "testingFabricateSQL3-r1" */;
+			buildConfigurationList = 2B6DAE6024E170C3003392E9 /* Build configuration list for PBXNativeTarget "testingFabricateSQL3r2" */;
 			buildPhases = (
 				2B6DAE5524E170C2003392E9 /* Sources */,
 				2B6DAE5624E170C2003392E9 /* Frameworks */,
@@ -82,9 +82,9 @@
 			);
 			dependencies = (
 			);
-			name = "testingFabricateSQL3-r1";
+			name = testingFabricateSQL3r2;
 			productName = testingFabricateSQL3;
-			productReference = 2B6DAE5924E170C2003392E9 /* testingFabricateSQL3-r1 */;
+			productReference = 2B6DAE5924E170C2003392E9 /* testingFabricateSQL3r2 */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -101,7 +101,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 2B6DAE5424E170C2003392E9 /* Build configuration list for PBXProject "testingFabricateSQL3-r1" */;
+			buildConfigurationList = 2B6DAE5424E170C2003392E9 /* Build configuration list for PBXProject "testingFabricateSQL3r2" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -113,7 +113,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2B6DAE5824E170C2003392E9 /* testingFabricateSQL3-r1 */,
+				2B6DAE5824E170C2003392E9 /* testingFabricateSQL3r2 */,
 			);
 		};
 /* End PBXProject section */
@@ -268,7 +268,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2B6DAE5424E170C2003392E9 /* Build configuration list for PBXProject "testingFabricateSQL3-r1" */ = {
+		2B6DAE5424E170C2003392E9 /* Build configuration list for PBXProject "testingFabricateSQL3r2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2B6DAE5E24E170C3003392E9 /* Debug */,
@@ -277,7 +277,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2B6DAE6024E170C3003392E9 /* Build configuration list for PBXNativeTarget "testingFabricateSQL3-r1" */ = {
+		2B6DAE6024E170C3003392E9 /* Build configuration list for PBXNativeTarget "testingFabricateSQL3r2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2B6DAE6124E170C3003392E9 /* Debug */,

@@ -9,7 +9,7 @@
 #ifndef testingFabricateSQL3_h
 #define testingFabricateSQL3_h
 // P R O T O T Y P E    P R O T O T Y P E    P R O T O T Y P E    P R O T O T Y P E    P R O T O T Y P E    P R O T O T Y P E
-void fabricateSQLr2(int numberOfTokensEqualToNumberOfReplacements,              /* number of tokens (and replacements) to process */ \
+void fabricateSQLr2(char *pd, /* pointer to buffer containing fabricateSQL's performance data. If NULL then no performance data. */ \
                   char **tokensAndReplacements,        /*  a 2-dimensional array of pointers to characters forming the tokens and  \
                     replacements. \
                     Note that the first parameter of fabricateSQLr2, above, defines the size of this array. */ \
@@ -21,4 +21,8 @@ void fabricateSQLr2(int numberOfTokensEqualToNumberOfReplacements,              
 //Above is how one calls the c++-coded dylib, fabricateSQL
 static const char *  SUNRISE = "<";
 static const char  * SUNSET =  ">";
+typedef struct sqlArray {
+    char *psql;
+    unsigned long ulsql;
+} sqlArray;
 #endif /* testingFabricateSQL3_h */
