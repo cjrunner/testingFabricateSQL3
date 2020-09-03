@@ -111,8 +111,8 @@ int main(int argc, const char **argv) { //const char *argv[] is the same as **ar
 
 //    ss[1][1] = (char *)(argv+1);
 //    ss[2][1] = (char *)(argv+2);
-    char **ptrss;
-    ptrss = &ss[0][0];
+    char **ptrss; //Point to an array of pointrs to character arrays (sometimes called c-strings);
+    ptrss = &ss[0][0]; //Point to the first element of the array of pointers to character arrays.
     unsigned long i=0;
     unsigned long j=0;
     while (  i < ( argc - d )  ) {
@@ -127,17 +127,18 @@ int main(int argc, const char **argv) { //const char *argv[] is the same as **ar
         j = 1 + j;
         i = 2 + i; //get the next pair of token/replacemnet values
     }
-    char *ptrPerformanceBuffer;
-    ptrPerformanceBuffer = (char *)calloc(1000,1);
+    timings *ptrPerformanceBuffer;
+    
     void *p;
     int k=0;
-    FILE *fp = fopen ("/Users/cjc/sql/testingFabricateSQL3.sql", "a");
-    rewind(fp); // Start at the beginning;
+    FILE *fp = fopen ("/Users/cjc/sql/testingFabricateSQL3.sql", "w");
+
     do {
     char *cbb_results = (char *) calloc(2*sqa[k]->ulsql, 1); //Since we don't know if the token/replacement process used to \
         fabricate the SQL will result in result that is greater than or less than the size of the input template, we will request \
         an outbuffer si
     char *ptrSQL_Input_Template = (char *)calloc(sqa[k]->ulsql, 1 );
+    ptrPerformanceBuffer = (timings *)calloc(1,1);
     p = (char *)memcpy(ptrSQL_Input_Template, sqa[k]->psql, sqa[k]->ulsql ); //memcpy requires #include <string.h>
     if (d) printf ("4.%d ========> about to call fabricateSQL\n", k);
     rc = expectedNumberOfTokenReplacements>>1; // Let rc contain the number of template/replacement pairs.
@@ -148,7 +149,13 @@ int main(int argc, const char **argv) { //const char *argv[] is the same as **ar
     rc=fprintf(fp, "%s\n", cbb_results);
     if (rc) printf("Got a non-zero return code from fprintf of %d\n", rc);
     if (d) printf("7.%d  Done =============================================================================\n", k);
-    printf("fabricateSQL's performance data:\n%s", ptrPerformanceBuffer);
+    printf("fabricateSQL's total execution time: %lu nsec;\ntime to do constructor processing: %lu nsec;\ntime to do fabricate processing: %lu nsec;\ntime to do delete processing: %lu nsec.", \
+        ptrPerformanceBuffer->totalTime, \
+        ptrPerformanceBuffer->constructorTime, \
+        ptrPerformanceBuffer->fabricateTime, \
+        ptrPerformanceBuffer->deleteTime
+    );
+    free (ptrPerformanceBuffer);
     free(ptrSQL_Input_Template);
     free(cbb_results);
     
@@ -164,6 +171,6 @@ int main(int argc, const char **argv) { //const char *argv[] is the same as **ar
     } while (sqa[k]->psql != NULL &&  sqa[k]->ulsql > 0);
     rc = fclose(fp);
     
-    free (ptrPerformanceBuffer);
+
     return 0;
 }

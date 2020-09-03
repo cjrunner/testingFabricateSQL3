@@ -8,8 +8,17 @@
 
 #ifndef testingFabricateSQL3_h
 #define testingFabricateSQL3_h
+#include <fabricateSQLr2.h> 
+/*
+typedef struct timings {
+    unsigned long constructorTime;
+    unsigned long fabricateTime;
+    unsigned long deleteTime;
+    unsigned long totalTime;
+} timings;
+*/
 // P R O T O T Y P E    P R O T O T Y P E    P R O T O T Y P E    P R O T O T Y P E    P R O T O T Y P E    P R O T O T Y P E
-void fabricateSQLr2(char *pd, /* pointer to buffer containing fabricateSQL's performance data. If NULL then no performance data. */ \
+void fabricateSQLr2(timings *pd, /* pointer to buffer containing fabricateSQL's performance data. If NULL then no performance data. */ \
                   char **tokensAndReplacements,        /*  a 2-dimensional array of pointers to characters forming the tokens and  \
                     replacements. \
                     Note that the first parameter of fabricateSQLr2, above, defines the size of this array. */ \
@@ -25,4 +34,5 @@ typedef struct sqlArray {
     char *psql;
     unsigned long ulsql;
 } sqlArray;
+
 #endif /* testingFabricateSQL3_h */
