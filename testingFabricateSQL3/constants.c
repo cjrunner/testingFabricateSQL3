@@ -116,7 +116,7 @@ the three, 2-dimensional, arrays that will be handed-off to fabricateSQLr2.dylib
 */
 
 fabstruct fs[4] = {
-    {&sunRiseArray[0][0], &sqlTemplateSR[0],     sizeof(sqlTemplateSR),  10}, \
+    {&sunRiseArray[0][0], &sqlTemplateSR[0], sizeof(sqlTemplateSR),  10}, \
     {&noonArray[0][0],    sqlTemplateNOON,   sizeof(sqlTemplateNOON), 6}, \
     {&sunSetArray[0][0],  sqlTemplateSS,     sizeof(sqlTemplateSR),  10}, \
     {0, 0, 0, 0} //List terminator.
