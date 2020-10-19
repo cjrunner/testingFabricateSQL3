@@ -8,7 +8,13 @@
 
 #ifndef testingFabricateSQL3_h
 #define testingFabricateSQL3_h
-#include <fabricateSQLr2.h> 
+#include <fabricateSQLr2.h>
+typedef struct {
+    char **fa;
+    char *myTemplate;
+    int  templateSize;
+    int  numberOfTokenReplacementPairs;
+} fabstruct;
 /*
 typedef struct timings {
     unsigned long constructorTime;
@@ -28,8 +34,11 @@ void fabricateSQLr2(timings *pd, /* pointer to buffer containing fabricateSQL's 
                   int sizeOf_resulting_c_StringBuffer,                                 /* size of the resulting_c_string buffer */ \
                   int debugFlag                                                 /* output debug messages when set to >0 [TRUE] */ );
 //Above is how one calls the c++-coded dylib, fabricateSQL
-static const char *  SUNRISE = "<";
-static const char  * SUNSET =  ">";
+static const char *SUNRISE = "<";
+static const char *SUNSET =  ">";
+static const char *ptr_preamble_replacement = "BEGIN; FETCH ALL in srportal";
+static const char *ptr_postamble_replacement = "CLOSE srportal; END;";
+static const char *ptr_field_replacement = "zenithdistance";
 typedef struct sqlArray {
     char *psql;
     unsigned long ulsql;
