@@ -251,6 +251,7 @@
 				"HEADER_SEARCH_PATHS[arch=*]" = /usr/local/include/fabricateSQL;
 				"LD_DYLIB_INSTALL_NAME[arch=*]" = /usr/local/lib;
 				LD_GENERATE_MAP_FILE = YES;
+				"LIBRARY_SEARCH_PATHS[arch=*]" = /usr/local/lib;
 				"MODULEMAP_FILE[sdk=*]" = /tmp/testingFabricateSQL3_module_map_file;
 				"OTHER_LDFLAGS[arch=*]" = "-lfabricateSQLr2";
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -9,6 +9,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <errno.h>
 #include "testingFabricateSQL3.h"
 
 //see constants.c
@@ -23,8 +26,8 @@ extern char *ptrSQLTemplateSR;
 extern unsigned long sizeOfTemplateSR;
 extern sqlArray sqa[2][2];
 extern sqlArray  *ptrSA;
-extern char **fabricateArrays;
-
+extern char **fabricate2DArrays[];
+extern char *sunRiseArray[];
 extern fabstruct fs[3];
 // P R O T O T Y P E    P R O T O T Y P E    P R O T O T Y P E    P R O T O T Y P E    P R O T O T Y P E    P R O T O T Y P E
 //void fabricateSQL(int numberOfTokensEqualToNumberOfReplacements, /* number of tokens (and replacements) to process */ \
@@ -35,7 +38,7 @@ extern fabstruct fs[3];
 //                  int sizeOf_resulting_c_StringBuffer, /* size of the previous buffer */  \
 //                  int debugFlag /* output debug messages when set to >0 [TRUE] */     );
 
-int main(int argc, const char **argv) { //const char *argv[] is the same as **argv
+int main(int argc, const char **argv, const char **env, const char **somethingElse) { //const char *argv[] is the same as **argv
     // ******************************************************************************************************************************* \
     Note: fabricateSQL, the dylib under test, is found at: \
     /Users/cjc/Library/Developer/Xcode/DerivedData/Build/Products/Debug/libfabricateSQL.dylib \
@@ -44,48 +47,27 @@ int main(int argc, const char **argv) { //const char *argv[] is the same as **ar
     "Dynamic Library Install Name"; \
     b) Place `-lfabricateSQL` in "Other Linker Flags". \
     *******************************************************************************************************************************
-/*
-    const int maxRows = 4;
-    const int maxColumns=2;
-    sqlArray sqa[maxRows][maxColumns];
-    sqa[3]->psql = NULL;
-    sqa[3]->ulsql = 0;
-    sqa[2]->psql = ptrSQLTemplateSS;           //Points to a character string of: PREAMBLE SELECT * FROM …
-    sqa[2]->ulsql = sizeOfTemplateSS;          //returns a reasonable result of 1214 bytes
-    //NOT THIS    sqa[2]->ulsql = sizeof(ptrSQLTemplateSS);  //returns a size of 8, the number of bytes comprising the size of a pointer
-    sqa[1]->psql = ptrSQLTemplateNOON;         //Points to a character string of: PREAMBLE SELECT * FROM …
-    sqa[1]->ulsql = sizeOfTemplateNOON;        //Returns a reasonable result of 1330 bytes
-    //NOT THIS    sqa[1]->ulsql =sizeof(ptrSQLTemplateNOON); //Returns a value of 8, the number of bytes comprising the size of a pointer
-    sqa[0]->psql = ptrSQLTemplateSR;           //Points to a character string of: PREAMBLE SELECT * FROM …
-    sqa[0]->ulsql = sizeOfTemplateSR;          //Returns a reasonable result of 1262 bytes
-    //NOT THIS    sqa[0]->ulsql = sizeof(ptrSQLTemplateSR);  //Returns a reasonable value of 8, the number of bytes comprising a pointer
-    sqlArray  **ptrSA;
-    sqlArray  *ptrsa;
-    ptrsa = &sqa[0][0]; //Establish addressability to the array of structurs of type sqlArray
-    ptrSA = &ptrsa;
-    for (int k=0; k<maxRows; k++) {
-        printf("%d, In source module constants.cpp, the 2X2 array named sqa looks like:\n%s \nand is of length %lu.\n", k, \
-               sqa[k]->psql, sqa[k]->ulsql);
+    printf("===============================================somethingElse=====================================================\n");
+    int j=1;
+    int i=0;
+    int k=0;
+    while (*(somethingElse+j) ) {
+        printf("%02d. (note: j=0 is a pointer to 0x0…0, so we'll skip it) somethingElse address %p value %s\n", j, (somethingElse+j), *(somethingElse + j));
+        j++;
     }
- 
-    int rc;
-    printf( "0. Hello, %s\nsqlTemplate looks like:\n%s\nWe have %d input Parameters; command line parameters look like:\n",  \
-           argv[0], sqlTemplateSS, argc);
-    for (int i=0; i < argc; i++) {
-        printf ("\t%d. %s\n", i, argv[i]);
+    printf("=====================================================env=========================================================\n");
+    j=0;
+    while (*(env+j) ) {
+        printf("%02d. env address %p value %s\n", j, (env+j), *(env + j));
+        j++;
     }
-    if (strcmp("DEBUG", *(argv + argc-1)) ) { //argc-1 means that we look for the last command line argument to indicate if we \
-        go into debug mode. If the last command line argument is not `DEBUG` then we are not in debug mode.
-        d = 0; //Assume no debugging. Debugging enables by setting one more command line input, of ANY character.
-    } else {
-        d = 1; //Enable debugging info from dylib.
+    printf("======================================================argv========================================================\n");
+    j=0;
+    while (*(argv+j) ) {
+        printf("%02d. argv address %p value %s\n", j, (argv+j), *(argv + j));
+        j++;
     }
- */
- //   int expectedNumberOfTokenReplacements = argc-1-d; //This is the expected number of command line arguments we expect to have if \
-    we don't set the debugging flag.
-//    int numberOfTokenReplacementPairs = expectedNumberOfTokenReplacements>>1;
-    //    const unsigned long sizeOfTemplate = sizeof(*sqlTemplate)+1;
-    if (argc == 2) {
+    if  ( (argc > 1) && (((strcmp(argv[1], "--help" )) == 0) || ((strcmp(argv[1], "-h" )) == 0))  ) {
         printf ("01. The order of the command line parameters is:\n1. The decimal siteid\n02. the date of interest (in YYYY-MM-DD format)\n \
                 03. The zenithdistance of sunrise/sunset as a decimal floating point number (like 90.5833..)\n4. The numer of lines of data before \
                 sunrise/sunset (as a decimal integer)\n5. The number of lines after sunrise/sunset (as a decimal integer)\n6. An indicaton of \
@@ -94,107 +76,118 @@ int main(int argc, const char **argv) { //const char *argv[] is the same as **ar
                 desire to ouput debugging information.\n");
         exit(1);
     }
+    char ***f2d; // Mon Dieu, triple indirection!!
+    char **some2Darray;
+     f2d = (fabricate2DArrays + 0);  //Pick out the first (i.e., offset zero) of the entries in array, named fabricate2DArrays. This \
+    should be the SunRise array. The next (offset = 1) should be the Noon Array. After the noon Array should be the SunSet Array \
+    (i.e., offset = 2).
     int d;
-    for (int i=0; i < argc; i++) printf ("\t%d. %s\n", i, argv[i]);
+    for (i=0; i < argc; i++) printf ("\t%d. %s\n", i, argv[i]); //List out the command line argument
     if (strcmp("DEBUG", *(argv + argc-1)) ) { //argc-1 means that we look for the last command line argument to indicate if we \
         go into debug mode. If the last command line argument is not `DEBUG` then we are not in debug mode.
         d = 0; //Assume no debugging. Debugging enables by setting one more command line input, of ANY character.
     } else {
         d = 1; //Enable debugging info from dylib.
+        printf("                                       Debug mode enabled\n");
     }
-    //
-    //  constants.cpp
-    //  dataSurroundingSunSet
-    //
-    //  Created by Clifford Campo on 8/7/20.
-    //  Copyright © 2020 CliffordCampo. All rights reserved.
-    //
-    //        SS *doSunSet =  new SS; //How does a C program know about c++ classes?
- //   char *ss[numberOfTokenReplacementPairs][2];
-    //    char *ss[][2] = { /* Works for 2-column arrays of an arbitrary number of rows */ \
-    //        {"SITEID", ""}, /* Let us see how the compiler responds to NULL. According to debugger NULL looks like an
-    //                           address of 00 00 00 00 00 00 00 00 */ \
-    {"_DATE_",""},\
-    {"SUNSETDEF","90.58333333"}, \
-    {"BEFORESUNSET", "3"}, \
-    {"AFTERSUNSET","3"},\
-    {"SRorSS","SR"}, \
-    {"TERM", ""} /* "TERM" signifies last row while the second argument of this row is of zero length */ \
-    };
-    
-    //    ss[1][1] = (char *)(argv+1);
-    //    ss[2][1] = (char *)(argv+2);
-  //  char **ptrss; //Point to an array of pointrs to character arrays (sometimes called c-strings);
- //   ptrss = &ss[0][0]; //Point to the first element of the array of pointers to character arrays.
- //   unsigned long i=0;
-//    unsigned long j=0;
- //   while (  i < ( argc - d )  ) {
-        //    for (unsigned long i=0; i <  expectedNumberOfTokenReplacements +1; i++ ) {
-        //        printf("%s\t%s\n", ss[i][0], ss[i][1]); is another way to represent the print statement;
-        //       ss[i+1][1] = (char *)(argv+i+1); //Fill the second column of each row of the 2-dimentional array, named ss, with the \
-        value from command line
-  //      ss[j][0] = (char *)argv[i+1];  //Copy the pointer to the token
-  //      ss[j][1] = (char *)argv[i+2];  //Copy the pointer to the token's replacement value
-  //      printf("%lu\tAddress %#lx\t%s\t%#lx\t%s\n", i, (unsigned long)*(ptrss+i), (char *)(*(ptrss+i)), (unsigned long)*(ptrss+i+1), (char *)(*(ptrss+i+1)) );
-        
-   //     j = 1 + j;
-   //     i = 2 + i; //get the next pair of token/replacemnet values
-   // }
+//Update the internal 2D-arrays that will drive the fabrication process.
+    for (i = 0; (i < argc-1 && argc > 1); i++ ) {
+        if(*(f2d + i)) {
+            some2Darray = *(f2d + i);
+            //        Given that the first argv entry (argc=1) is a pointer to the fully qulaified file name of this executable then:
+            if (argc >= 2) {
+                *(some2Darray + OFFSET_SITEID*2 + 1) = *(char **)(argv + 1); //The next command line argument is the desired siteid.
+            }
+            if (argc >= 3) {
+                *(some2Darray + OFFSET_DATE*2 + 1)   = *(char **)(argv + 2); //Then the desired date
+            }
+            if (argc >= 4) { //Then the number of desired number, before and after, of entryies caller desires that this program \
+                return from database.
+                *(some2Darray + OFFSET_BEFOREDATAPOINTS*2 + 1)   = *(char **)(argv + 3);
+                *(some2Darray + OFFSET_AFTERDATAPOINTS*2 + 1)   =  *(char **)(argv + 3);
+            }
+        } else {
+            break;
+        }
+        if (d) {
+            j=0;
+            while ( *(some2Darray + j) != NULL ) {
+                printf ("address %p, value: %s\t address %p, value: %s\n", (some2Darray + j), *(some2Darray + j), (some2Darray + j+1), *(some2Darray + j+1) );
+                j = j + 2;
+            }
+            printf ("%02d. ==================================================================================================\n", k);
+            k++;
+        }
+    } //End of for
+
+
+
+
+
     timings *ptrPerformanceBuffer;
-    int rc = 0;
+    char *ptrSQL_Input_Template;
+    char *cbb_results;
+    FILE *fp;
+    fp = fopen ("/Users/cjc/sql/testingFabricateSQL3.sql", "w");
+    size_t rc = 0;
+
+    int charactersWrittenToFile = 0;
     void *p;
-    int k=0;
-    FILE *fp = fopen ("/Users/cjc/sql/testingFabricateSQL3.sql", "w");
+    k=0;
+
     char **ptrMyArrays;
     fabstruct *f;  //Establish Addressability to typedef struct named fabsstruct
+    size_t outBufSize;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     do {
+        
         f = &fs[k]; //Get the k-th entry
         ptrMyArrays = f->fa; //Points to Preamble
-        char *cbb_results = (char *) calloc(( f->templateSize + ( (f->templateSize)<<2) ), 1); //Since we don't know if the \
+        rc = f->templateSize + ((f->templateSize)<<2);
+        printf ( "%02d. The size of the template is %d bytes. f->templateSize + ((f->templateSize)<<2) = %zu btyes.\n\n", k, f->templateSize, rc) ;
+        cbb_results = (char *) calloc(( f->templateSize + ( (f->templateSize)<<2) ), 1); //Since we don't know if the \
         token/replacement process used to fabricate the SQL will result in result that is greater than or less than the size of \
-        the input template, we will request an outbuffer size that is 25% greater than the template size. Probably more than \
+        the input template, we will request an outbuffer size that is 50% greater than the template size. Probably more than \
         enough space.
-        char *ptrSQL_Input_Template = (char *)calloc(f->templateSize, 1 );
+        ptrSQL_Input_Template= (char *)calloc(f->templateSize, 1 );
         ptrPerformanceBuffer = (timings *)calloc(1,1);
         p = (char *)memcpy(ptrSQL_Input_Template, f->fa, f->templateSize ); //memcpy requires #include <string.h>
         if (d) printf ("04.%d ========> about to call fabricateSQL\n", k);
  //       rc = expectedNumberOfTokenReplacements>>1; // Let rc contain the number of template/replacement pairs.
-        fabricateSQLr2(ptrPerformanceBuffer, f->fa, f->myTemplate, cbb_results, f->templateSize, d);
+        fabricateSQLr2(ptrPerformanceBuffer, f->fa, f->myTemplate, f->templateSize, cbb_results, &outBufSize, d);
         //    fabricateSQLr2(ptrPerformanceBuffer, &ss[0][0], ptrSQL_Input_Template, cbb_results, (int)sizeOfTemplateSS*2, d);
         //    fabricateSQLr2(ptrPerformanceBuffer, &ss[0][0], NULL, cbb_results, (int)sizeOfTemplateSS*2, d);
         //    fabricateSQLr2(NULL, &ss[0][0], NULL, cbb_results, (int)sizeOfTemplateSS*2, d);
         //    fabricateSQLr2(NULL, &ss[0][0], NULL, cbb_results, (int)NULL, d);
         if (d) printf("05.%d =======> Returned from fabricateSQL\n", k);
         if (d) printf("06.%d Call-back buffer, cbb, looks like:\n", k);
-        printf  ("07. %s\n", cbb_results);
-        rc=fprintf(fp, "08. %s\n", cbb_results);
-        if (rc) printf("09. Got a non-zero return code from fprintf of %d\n", rc);
+        printf  ("07.%d %s\n", k, cbb_results);
+//        rc=fputs( cbb_results,  fp);
+        printf("outBufSize is %zu, strlen(cbb_results) is %lu, ∆ is %lu\n", outBufSize, strlen(cbb_results), outBufSize - strlen(cbb_results));
+        charactersWrittenToFile += fwrite(cbb_results, \
+                        strlen(cbb_results), \
+                        1, fp); // Output into the output file the first logical record, the SQL COPY statement.
+        if (charactersWrittenToFile>0) {
+            printf("09a.%d Got a non-zero return code from fprintf of %d \n", k, charactersWrittenToFile);
+        } else {
+            printf("09b.%d ERROR: got a negative return code from fwrite or %d \n)", k, charactersWrittenToFile);
+        }
         if (d) printf("10.%d  Done =============================================================================\n", k);
-        printf("fabricateSQL's total execution time: %lu nsec;\ntime to do constructor processing: %lu nsec;\ntime to do fabricate processing: %lu nsec;\ntime to do delete processing: %lu nsec.", \
+        printf("fabricateSQL's total execution time: %lu nsec;\ntime to do constructor processing: %lu nsec;\ntime to do fabricate \
+processing: %lu nsec;\ntime to do delete processing: %lu nsec.", \
                ptrPerformanceBuffer->totalTime, \
                ptrPerformanceBuffer->constructorTime, \
                ptrPerformanceBuffer->fabricateTime, \
                ptrPerformanceBuffer->deleteTime
                );
-        free (ptrPerformanceBuffer);
+        
+
+        free(ptrPerformanceBuffer);
         free(ptrSQL_Input_Template);
         free(cbb_results);
-        
         k++;
-        /*
-         if (k == 2) {
-         for (j = 0; j < numberOfTokenReplacementPairs; j++) {
-         if (strcmp(ss[j][0], "SRorSS") == 0) {
-         ss[j][1] = (char *)ptrSS;
-         break;
-         }
-         }
-         }
-         */
-    } while (k < 4);
+    } while (k < 3);
+
     rc = fclose(fp);
-    
-    
-    return rc;
+    return (int)rc;
 }

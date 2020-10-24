@@ -8,8 +8,15 @@
 
 #ifndef testingFabricateSQL3_h
 #define testingFabricateSQL3_h
-#include <fabricateSQLr2.h>  //fabricateSQLr2.dylib is in /usr/local/lib and fabricateSQLr2.h is found in \
--rw-r--r--@ 1 cjc  admin  3315 Sep  2 09:18 /usr/local/include/fabricateSQL/fabricateSQLr2.h
+#include <stddef.h>
+#include <fabricateSQLr2.h>
+#define OFFSET_SITEID 1
+#define OFFSET_DATE 2
+#define OFFSET_BEFOREDATAPOINTS 4
+#define OFFSET_AFTERDATAPOINTS 5
+#define BYTES_PER_CHARACTER 1
+// #include "/usr/local/include/fabricateSQL/fabricateSQLr2.h"  //fabricateSQLr2.dylib is in /usr/local/lib; \
+fabricateSQLr2.h is found in -rw-r--r--@ 1 cjc  admin  3315 Sep  2 09:18 /usr/local/include/fabricateSQL/fabricateSQLr2.h
 typedef struct {
     char **fa;
     char *myTemplate;
@@ -20,28 +27,23 @@ typedef struct sqlArray {
     char *psql;
     unsigned long ulsql;
 } sqlArray;
-/*
-typedef struct timings {
-    unsigned long constructorTime;
-    unsigned long fabricateTime;
-    unsigned long deleteTime;
-    unsigned long totalTime;
-} timings;
-*/
+
 // P R O T O T Y P E    P R O T O T Y P E    P R O T O T Y P E    P R O T O T Y P E    P R O T O T Y P E    P R O T O T Y P E
-void fabricateSQLr2(timings *pd, /* pointer to buffer containing fabricateSQL's performance data. If NULL then no performance data. */ \
-    char **tokensAndReplacements, /*  a 2-dimensional array of pointers to characters forming the tokens and
-                    replacements. Note that the first parameter of fabricateSQLr2, above, defines the size of this array. */ \
-    char *input_c_string_template_buffer,  /* points to the buffer containing the template */ \
-    char *resulting_c_StringBuffer,        /* points to the buffer contining the resulting sql, having all
-                    Tokens replaced by their replacement c-strings. */ \
-    int sizeOf_resulting_c_StringBuffer, /* size of the resulting_c_string buffer */ \
-    int debugFlag );                      /* output debug messages when set to >0 [TRUE] */
-//Above is how one calls the c++-coded dylib, fabricateSQL
+void fabricateSQLr2(timings *pd, /*Pointer to buffer containing fabricateSQL's performance data. If NULL then no performance data*/ \
+  char **tokensAndReplacements, /*  a 2-dimensional array of pointers to characters forming the tokens and
+       replacements. Note that the first parameter of fabricateSQLr2, above, defines the size of this array. */ \
+  char *input_c_string_template_buffer,  /* points to the buffer containing the template */ \
+  int  sizeOfTemplate,                   /* Size, in bytes, of the input_c_string_template_buffer */
+  char *resulting_c_StringBuffer,        /* points to the buffer contining the resulting sql, having all Tokens replaced by their \
+    replacement c-strings. */ \
+  size_t *sizeOf_resulting_c_StringBuffer, /* size of the resulting_c_string buffer */ \
+  int debugFlag );                      /* output debug messages when set to >0 [TRUE] */
+//Above is how one calls the c++-coded dylib, named fabricateSQL
+
 static const char *SUNRISE = "<";
 static const char *SUNSET =  ">";
 static const char *ptr_preamble_replacement = "BEGIN; DECLARE CURSOR srnoonssportal ";
-static const char *ptr_postamble_replacement = "FETCH ALL srnoonssportal; CLOSE srportal; END;";
+static const char *ptr_postamble_replacement = "FETCH ALL srnoonssportal; CLOSE srnoonssportal; END;";
 static const char *ptr_field_replacement = "zenithdistance";
 
 
